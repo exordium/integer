@@ -1,0 +1,34 @@
+cabal-version: 2.4
+name: integer
+homepage: https://github.com/exordium/integer
+version: 0.1.0.0
+category: Prelude
+synopsis: GMP Integers
+description: In the style of classless
+
+stability: cursed
+bug-reports: https://github.com/exordium/integer/issues
+author: Dai
+maintainer: dai@sodality.cc
+copyright: 2020 Sodality
+license: MIT
+
+extra-source-files:
+  README.md
+  CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/exordium/integer
+
+
+library 
+  default-language: Haskell2010
+  default-extensions: MagicHash, UnboxedTuples
+                    , KindSignatures, PolyKinds, ConstraintKinds, TypeOperators, RankNTypes
+                    , BlockArguments, UnicodeSyntax
+                    , PatternSynonyms, ViewPatterns
+  hs-source-dirs: src
+  exposed-modules: Integer, Big.N, Big.N.Bit
+  other-modules: Pre
+  build-depends: integer-gmp, base, prim
