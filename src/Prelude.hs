@@ -10,4 +10,4 @@ import Stock.IO as X
 import GHC.Integer as X
 import GHC.Integer.GMP.Internals as X
 
-type I = Integer
+type ℤ = Integer
