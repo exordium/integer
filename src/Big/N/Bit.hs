@@ -1,6 +1,4 @@
-{-# language NoImplicitPrelude #-}
 module Big.N.Bit where
-import Pre
 import Big.N
 
 

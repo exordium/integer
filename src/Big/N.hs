@@ -1,6 +1,4 @@
-{-# language NoImplicitPrelude #-}
 module Big.N where
-import Pre
 import qualified Prim as P
 import qualified Array
 import qualified Array.Byte
@@ -8,7 +6,7 @@ import qualified Ref
 
 type N = BigNat
 pattern BN# ∷ Array.Byte → N
-pattern BN# bs = Pre.BN# bs
+pattern BN# bs = Prelude.BN# bs
 valid' ∷ BigNat → P.B
 valid' = isValidBigNat#
 type Limb# = U64

@@ -1,5 +1,5 @@
 {-# language NoImplicitPrelude #-}
-module Pre (module X, module Pre) where
+module Prelude (module X, module Prelude) where
 import Prim as X hiding (Int,B,IO)
 import Stock.B as X
 import Stock.Ord as X (Ordering)

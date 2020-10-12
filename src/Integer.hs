@@ -1,6 +1,4 @@
-{-# language NoImplicitPrelude #-}
 module Integer where
-import Pre
 import qualified Prim as P
 import qualified Ref
 import qualified Array.Byte
@@ -108,10 +106,7 @@ sqr = sqrInteger
 -- Future versions of @integer_gmp@ may not support negative @/e/@
 -- values anymore.
 --
-powMod# , powModSec# ∷ I -- ^ base @b@
-       → I -- ^ exponent @e@
-       → I -- ^ modulo @m@
-       → I 
+powMod# , powModSec# ∷ I {- ^ base -} → I {- ^ exponent -} → I {- ^ modulo -} → I 
 powMod# = powModInteger
 
 -- | b ^ (e % m)
@@ -131,8 +126,8 @@ powModSec# = powModSecInteger
 -- | The inverse of @/x/@ modulo @/m/@.
 -- If the inverse exists, the return value @/y/@ will satisfy @0 < /y/ <
 -- abs(/m/)@, otherwise the result is @0@.
-recipMod ∷ I → I → I
-recipMod = recipModInteger
+recipMod ∷ I {- ^ modulus -} → I → I
+recipMod m x = recipModInteger x m
 
 -- | Probalistic Miller-Rabin primality test.
 --
@@ -169,30 +164,15 @@ exportToRef = exportIntegerToAddr
 -- | Dump 'Integer' (without sign) to mutable byte-array in base-256
 -- representation.
 --
--- The call
---
--- @'exportIntegerToMutableByteArray' /i/ /mba/ /offset/ /msbf/@
---
--- writes
---
--- * the 'Integer' @/i/@
---
--- * into the 'MutableByteArray#' @/mba/@ starting at @/offset/@
---
--- * with most significant byte first if @msbf@ is @1#@ or least
---   significant byte first if @msbf@ is @0#@, and
---
--- * returns number of bytes written.
---
--- Use \"@'sizeInBaseInteger' /i/ 256#@\" to compute the exact number of
+-- Use \"@'sizeInBase' /i/ 256#@\" to compute the exact number of
 -- bytes written in advance for @/i/ /= 0@. In case of @/i/ == 0@,
--- 'exportIntegerToMutableByteArray' will write and report zero bytes
--- written, whereas 'sizeInBaseInteger' report one byte.
+-- 'exportToBuffer' will write and report zero bytes
+-- written, whereas 'sizeInBase' report one byte.
 --
--- It's recommended to avoid calling 'exportIntegerToMutableByteArray' for small
+-- It's recommended to avoid calling 'exportToBuffer' for small
 -- integers as this function would currently convert those to big
 -- integers in msbf to call @mpz_export()@.
-exportToBuffer ∷ I → Array.Byte.M (☸) → U64 → I64 → IO Word
+exportToBuffer ∷ I → Array.Byte.M (☸) → U64 {- ^ offset -} → P.B {- ^ msfb -} → IO Word {- ^ # bytes written -}
 exportToBuffer = exportIntegerToMutableByteArray
 
 importFromRef ∷ Ref.Byte → U64 → I64 → IO I
