@@ -1,5 +1,5 @@
+{-# language MagicHash #-}
 module Big.N where
-import qualified Prim as P
 import qualified Array
 import qualified Array.Byte
 import qualified Ref
@@ -7,13 +7,11 @@ import qualified Ref
 type N = BigNat
 pattern BN# ∷ Array.Byte → N
 pattern BN# bs = Prelude.BN# bs
-valid' ∷ BigNat → P.B
+valid' ∷ N → B#
 valid' = isValidBigNat#
-type Limb# = U64
-type Limb = Word
-type Size# = I64
-type Size = Int
-size ∷ N → Size#
+type Limb = U
+type Size = I
+size ∷ N → Size
 size = sizeofBigNat#
 zero, one, null ∷ N
 zero = zeroBigNat
@@ -42,30 +40,30 @@ null = nullBigNat
 --
 -- Note: size parameter (times @sizeof(GmpLimb)@) must be less or
 -- equal to its 'Array.Byte.size'.
-fromBA ∷ Array.Byte → Size# → N
+fromBA ∷ Array.Byte → Size → N
 fromBA = byteArrayToBigNat#
 
 -- | 1-limb
-fromU64 ∷ U64 → N
-fromU64 = wordToBigNat
-toU64 ∷ N → U64
-toU64 = bigNatToWord
+fromU ∷ U → N
+fromU = wordToBigNat
+toU ∷ N → U
+toU = bigNatToWord
 
 -- | 2 limbs. The first argument is the most-significant limb.
-fromU64_2 ∷ U64 → U64 → N
-fromU64_2 = wordToBigNat2
+fromU_2 ∷ U → U → N
+fromU_2 = wordToBigNat2
 
-toI64 ∷ N → I64
-toI64 = bigNatToInt
+toI ∷ N → I
+toI = bigNatToInt
 
-index ∷ N → Size# → Limb#
+index ∷ N → Size → Limb
 index = indexBigNat#
 
 (+), (-), (*), add, sub, mul ∷ N → N → N
 (+) = plusBigNat; add y x = x + y
 (-) = minusBigNat; sub y x = x - y
 (*) = timesBigNat; mul y x = x * y
-addW, subW, mulW ∷ Limb# → N → N
+addW, subW, mulW ∷ Limb → N → N
 addW y x = plusBigNatWord x y
 -- | 'null' on underflow
 subW y x = minusBigNatWord x y
@@ -78,20 +76,20 @@ sqr = sqrBigNat
 quotRem ∷ N → N → (# N , N #)
 quotRem y x = quotRemBigNat x y
 -- | quotRem n 0 is undefined
-quotRemW ∷ Limb# → N → (# N , Limb# #)
+quotRemW ∷ Limb → N → (# N , Limb #)
 quotRemW y x = quotRemBigNatWord x y
 
 (//),(%%), quot, rem ∷ N → N → N
 (//) = quotBigNat; quot y x = x // y
 (%%) = remBigNat; rem y x = x %% y
-quotW ∷ Limb# → N → N
+quotW ∷ Limb → N → N
 quotW y x = quotBigNatWord x y
-remW ∷ Limb# → N → U64
+remW ∷ Limb → N → U
 remW y x = remBigNatWord x y
 
 gcd ∷ N → N → N
 gcd = gcdBigNat
-gcdW ∷ N → U64 → U64
+gcdW ∷ N → U → U
 gcdW = gcdBigNatWord
 
 powMod# ∷ N -- ^ base @b@
@@ -102,20 +100,20 @@ powMod# = powModBigNat
 
 powModW# ∷ N -- ^ base @b@
          → N -- ^ exponent @e@
-         → Limb# -- ^ modulo @m@
-         → Limb#
+         → Limb -- ^ modulo @m@
+         → Limb
 powModW# = powModBigNatWord
 
 
 -- * Import/Export
 --
-sizeInBase ∷ N → I64 → U64
+sizeInBase ∷ N → I → U
 sizeInBase = sizeInBaseBigNat
-exportToRef ∷ N → Ref.Byte → I64 → IO Word
+exportToRef ∷ N → Ref.Byte → I → IO Word
 exportToRef = exportBigNatToAddr
-exportToBuffer ∷ N → Array.Byte.M (☸) → U64 → I64 → IO Word
+exportToBuffer ∷ N → Array.Byte.M (☸) → U → I → IO Word
 exportToBuffer = exportBigNatToMutableByteArray
-importFromRef ∷ Ref.Byte → U64 → I64 → IO N
+importFromRef ∷ Ref.Byte → U → I → IO N
 importFromRef = importBigNatFromAddr
-importFromBuffer ∷ Ref.Byte → U64 → I64 → IO N
+importFromBuffer ∷ Ref.Byte → U → I → IO N
 importFromBuffer = importBigNatFromAddr

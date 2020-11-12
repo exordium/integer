@@ -1,37 +1,36 @@
-module ℤ where
-import qualified Prim as P
+module Z where
 import qualified Ref
 import qualified Array.Byte
 
 
--- | Construct 'ℤ' value from list of 'Int's.
+-- | Construct 'Z' value from list of 'Int's.
 -- This function is used by GHC for constructing 'Integer' literals.
 mk ∷ B -- ^ sign of integer ('True' if non-negative)
    → [Int] -- ^ absolute value expressed in 31 bit chunks, least
            --   significant first (ideally these would be
            --   machine-word 'Word's rather than 31-bit truncated 'Int's)
-   → ℤ
+   → Z
 mk = mkInteger; {-# inline mk #-}
 
-fromI64 ∷ I64 → ℤ
-fromI64 = smallInteger
+fromI ∷ I → Z
+fromI = smallInteger
 -- | Suitable for hashing
-toI64 ∷ ℤ → I64
-toI64 = integerToInt
-fromU64 ∷ U64 → ℤ 
-fromU64 = wordToInteger
-toU64 ∷ ℤ → U64
-toU64 = integerToWord
-toF32 ∷ ℤ → F32
+toI ∷ Z → I
+toI = integerToInt
+fromU ∷ U → Z 
+fromU = wordToInteger
+toU ∷ Z → U
+toU = integerToWord
+toF32 ∷ Z → F32
 toF32 = floatFromInteger
-toF64 ∷ ℤ → F64
+toF64 ∷ Z → F64
 toF64 = doubleFromInteger
 
 
 infixl 7 *, /, //, %, %%
 infixl 6 +, -
 (+), (-), (*), (/), (//), (%), (%%),
-  add, sub, mul, div, mod ∷ ℤ → ℤ → ℤ
+  add, sub, mul, div, mod ∷ Z → Z → Z
 (+) = plusInteger ; add y x = x + y
 (-) = minusInteger; sub y x = x - y
 (*) = timesInteger; mul y x = x * y
@@ -40,10 +39,10 @@ infixl 6 +, -
 (%) = modInteger   ; mod y x = x % y
 (%%) = remInteger  ; rem y x = x %% y
 
-divMod, quotRem ∷ ℤ → ℤ → (# ℤ , ℤ #)
+divMod, quotRem ∷ Z → Z → (# Z , Z #)
 divMod y x = divModInteger x y; quotRem y x = quotRemInteger x y
 
-negate, abs, signum ∷ ℤ → ℤ
+negate, abs, signum ∷ Z → Z
 negate = negateInteger 
 abs = absInteger
 signum = signumInteger
@@ -54,43 +53,43 @@ signum = signumInteger
 (>) = gtInteger; gt = (<)
 (≤) = leInteger; le = (≥)
 (≥) = geInteger; ge = (≤)
-cmp ∷ ℤ → ℤ → Ordering
+cmp ∷ Z → Z → Ordering
 cmp = compareInteger
 
 -- * Bitwise operations
 
-(∧), (∨), (⊕), and, or, xor ∷ ℤ → ℤ → ℤ
+(∧), (∨), (⊕), and, or, xor ∷ Z → Z → Z
 (∧) = andInteger; and = andInteger
 (∨) = orInteger; or = orInteger
 (⊕) = xorInteger; xor = xorInteger
 
-not ∷ ℤ → ℤ
+not ∷ Z → Z
 not = complementInteger
 
-shiftL#, shiftR# ∷ I64 → ℤ → ℤ
+shiftL#, shiftR# ∷ I → Z → Z
 shiftL# i x = shiftLInteger x i
 shiftR# i x = shiftRInteger x i
 
-testBit ∷ I64 → ℤ  → B
+testBit ∷ I → Z  → B
 testBit i x = testBitInteger x i
 
-popCnt ∷ ℤ → I64
+popCnt ∷ Z → I
 popCnt = popCountInteger
 
-bit ∷ I64 → ℤ
+bit ∷ I → Z
 bit = bitInteger
 
 
-valid' ∷ ℤ → P.B
+valid' ∷ Z → B#
 valid' = isValidInteger#
 
-gcd, lcm ∷ ℤ → ℤ → ℤ
+gcd, lcm ∷ Z → Z → Z
 gcd = gcdInteger; lcm = lcmInteger
 -- | @/a//s/ + /b//t/ = /gcd/@.
-gcdExt ∷ ℤ {- ^ a -} → ℤ {- ^ b -} → (# ℤ , ℤ #) {- ^ (gcd , s) -}
+gcdExt ∷ Z {- ^ a -} → Z {- ^ b -} → (# Z , Z #) {- ^ (gcd , s) -}
 gcdExt = gcdExtInteger
 
-sqr ∷ ℤ → ℤ
+sqr ∷ Z → Z
 sqr = sqrInteger
 
 -- | b ^ (e % abs m)
@@ -105,7 +104,7 @@ sqr = sqrInteger
 -- Future versions of @integer_gmp@ may not support negative @/e/@
 -- values anymore.
 --
-powMod# , powModSec# ∷ ℤ {- ^ base -} → ℤ {- ^ exponent -} → ℤ {- ^ modulo -} → ℤ 
+powMod# , powModSec# ∷ Z {- ^ base -} → Z {- ^ exponent -} → Z {- ^ modulo -} → Z 
 powMod# = powModInteger
 
 -- | b ^ (e % m)
@@ -125,7 +124,7 @@ powModSec# = powModSecInteger
 -- | The inverse of @/x/@ modulo @/m/@.
 -- If the inverse exists, the return value @/y/@ will satisfy @0 < /y/ <
 -- abs(/m/)@, otherwise the result is @0@.
-recipMod ∷ ℤ {- ^ modulus -} → ℤ → ℤ
+recipMod ∷ Z {- ^ modulus -} → Z → Z
 recipMod m x = recipModInteger x m
 
 -- | Probalistic Miller-Rabin primality test.
@@ -142,7 +141,7 @@ recipMod m x = recipModInteger x m
 -- The @/k/@ argument controls how many test rounds are performed for
 -- determining a /probable prime/. For more details, see
 -- <http://gmplib.org/manual/Number-Theoretic-Functions.html#index-mpz_005fprobab_005fprime_005fp-360 GMP documentation for `mpz_probab_prime_p()`>.
-testPrime ∷ ℤ → I64 → I64
+testPrime ∷ Z → I → I
 testPrime = testPrimeInteger
 
 -- | Compute next prime greater than @/n/@ probalistically.
@@ -151,13 +150,13 @@ testPrime = testPrimeInteger
 -- @mpz_nextprime()@ \"uses a probabilistic algorithm to identify
 -- primes. For practical purposes it's adequate, the chance of a
 -- composite passing will be extremely small.\"
-nextPrime ∷ ℤ → ℤ
+nextPrime ∷ Z → Z
 nextPrime = nextPrimeInteger
 
-sizeInBase ∷ ℤ → I64 → U64
+sizeInBase ∷ Z → I → U
 sizeInBase = sizeInBaseInteger
 
-exportToRef ∷ ℤ → Ref.Byte → I64 → IO Word
+exportToRef ∷ Z → Ref.Byte → I → IO Word
 exportToRef = exportIntegerToAddr
 
 -- | Dump 'Integer' (without sign) to mutable byte-array in base-256
@@ -171,10 +170,10 @@ exportToRef = exportIntegerToAddr
 -- It's recommended to avoid calling 'exportToBuffer' for small
 -- integers as this function would currently convert those to big
 -- integers in msbf to call @mpz_export()@.
-exportToBuffer ∷ ℤ → Array.Byte.M (☸) → U64 {- ^ offset -} → P.B {- ^ msfb -} → IO Word {- ^ # bytes written -}
+exportToBuffer ∷ Z → Array.Byte.M (☸) → U {- ^ offset -} → B# {- ^ msfb -} → IO Word {- ^ # bytes written -}
 exportToBuffer = exportIntegerToMutableByteArray
 
-importFromRef ∷ Ref.Byte → U64 → I64 → IO ℤ
+importFromRef ∷ Ref.Byte → U → I → IO Z
 importFromRef = importIntegerFromAddr
-importFromBuffer ∷ Ref.Byte → U64 → I64 → IO ℤ
+importFromBuffer ∷ Ref.Byte → U → I → IO Z
 importFromBuffer = importIntegerFromAddr

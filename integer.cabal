@@ -4,7 +4,7 @@ homepage: https://github.com/exordium/integer
 version: 0.1.0.0
 category: Prelude
 synopsis: GMP Integers
-description: In the style of classless
+description: In the style of classless. Needs GMP 5+
 
 stability: cursed
 bug-reports: https://github.com/exordium/integer/issues
@@ -28,7 +28,8 @@ library
                     , KindSignatures, PolyKinds, ConstraintKinds, TypeOperators, RankNTypes
                     , BlockArguments, UnicodeSyntax
                     , PatternSynonyms, ViewPatterns
+                    , PackageImports
   hs-source-dirs: src
-  exposed-modules: Integer, Big.N, Big.N.Bit
-  other-modules: Pre
-  build-depends: integer-gmp, base, prim
+  exposed-modules: Z, Big.N, Big.N.Bit, Word
+  other-modules: Prelude
+  build-depends: integer-gmp, microbase, prim
