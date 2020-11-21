@@ -1,5 +1,5 @@
 module Word where
-import qualified Ref
+import qualified Ref.Byte as Byte
 import qualified Array.Byte
 
 gcd ∷ U → U → U
@@ -19,7 +19,7 @@ recipMod m x = recipModWord x m
 sizeInBase ∷ U → I → U
 sizeInBase = sizeInBaseWord# 
 
-exportToRef ∷ Word → Ref.Byte → I → IO Word
+exportToRef ∷ Word → Byte.Ref → I → IO Word
 exportToRef = exportWordToAddr
 
 -- | Dump 'U' to mutable byte-array in base-256

@@ -2,7 +2,7 @@
 module Big.N where
 import qualified Array
 import qualified Array.Byte
-import qualified Ref
+import qualified Ref.Byte as Byte
 
 type N = BigNat
 pattern BN# ∷ Array.Byte → N
@@ -109,11 +109,11 @@ powModW# = powModBigNatWord
 --
 sizeInBase ∷ N → I → U
 sizeInBase = sizeInBaseBigNat
-exportToRef ∷ N → Ref.Byte → I → IO Word
+exportToRef ∷ N → Byte.Ref → I → IO Word
 exportToRef = exportBigNatToAddr
 exportToBuffer ∷ N → Array.Byte.M (☸) → U → I → IO Word
 exportToBuffer = exportBigNatToMutableByteArray
-importFromRef ∷ Ref.Byte → U → I → IO N
+importFromRef ∷ Byte.Ref → U → I → IO N
 importFromRef = importBigNatFromAddr
-importFromBuffer ∷ Ref.Byte → U → I → IO N
+importFromBuffer ∷ Byte.Ref → U → I → IO N
 importFromBuffer = importBigNatFromAddr

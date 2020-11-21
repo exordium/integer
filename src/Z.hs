@@ -1,5 +1,5 @@
-module Z where
-import qualified Ref
+module Z (Z,  module Z) where
+import qualified Ref.Byte as Byte
 import qualified Array.Byte
 
 
@@ -70,7 +70,7 @@ shiftL#, shiftR# ∷ I → Z → Z
 shiftL# i x = shiftLInteger x i
 shiftR# i x = shiftRInteger x i
 
-testBit ∷ I → Z  → B
+testBit ∷ I → Z → B
 testBit i x = testBitInteger x i
 
 popCnt ∷ Z → I
@@ -156,7 +156,7 @@ nextPrime = nextPrimeInteger
 sizeInBase ∷ Z → I → U
 sizeInBase = sizeInBaseInteger
 
-exportToRef ∷ Z → Ref.Byte → I → IO Word
+exportToRef ∷ Z → Byte.Ref → I → IO Word
 exportToRef = exportIntegerToAddr
 
 -- | Dump 'Integer' (without sign) to mutable byte-array in base-256
@@ -173,7 +173,7 @@ exportToRef = exportIntegerToAddr
 exportToBuffer ∷ Z → Array.Byte.M (☸) → U {- ^ offset -} → B# {- ^ msfb -} → IO Word {- ^ # bytes written -}
 exportToBuffer = exportIntegerToMutableByteArray
 
-importFromRef ∷ Ref.Byte → U → I → IO Z
+importFromRef ∷ Byte.Ref → U → I → IO Z
 importFromRef = importIntegerFromAddr
-importFromBuffer ∷ Ref.Byte → U → I → IO Z
+importFromBuffer ∷ Byte.Ref → U → I → IO Z
 importFromBuffer = importIntegerFromAddr
